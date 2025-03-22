@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>User Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <form
+      th:action="@{/submit}"
+      th:object="${userForm}"
+      method="post"
+      id="registerForm"
+    >
+      <label>Name:</label>
+      <input required type="text" th:field="*{name}" /><br />
+      <label>Email:</label>
+      <input required type="email" th:field="*{email}" /><br />
+      <label for="">Address</label>
+      <input required type="text" th:field="*{address}" /><br />
+      <label for="">Phone</label>
+      <input required type="text" th:field="*{phone}" /><br />
+
+      <label for="">Hobby</label>
+      <input required type="text" th:field="*{hobby}" /><br />
+
+      <label for="">Password</label>
+      <input required type="password" th:field="*{password}" /><br /><br />
+      
+      <button type="submit">Submit</button>
+    </form>
+    <div id="toast" class="toast">
+      Details submitted, redirecting to view details
+    </div>
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Stop immediate submission
+          const toast = document.getElementById("toast");
+          toast.style.display = "block"; // Show toast
+          setTimeout(() => {
+            this.submit();
+          }, 2000);
+        });
+    </script>
+  </body>
+</html>
