@@ -7,6 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 @Controller
@@ -24,6 +27,17 @@ public class MyFirstAppApplication {
 
     @PostMapping("/submit")
     public String submitForm(@ModelAttribute("userForm") UserForm userForm, Model model) {
+        try(FileWriter userDetails = new FileWriter("About.txt", true)){
+            userDetails.write("-----Filed Records--------📝 \n"+ LocalDateTime.now() + "---\n");
+            userDetails.write("Name: " + userForm.getName() + " \n");
+            userDetails.write("Email: " + userForm.getEmail() + " \n");
+            userDetails.write("Address: " + userForm.getAddress() + " \n");
+            userDetails.write("Hobby: " + userForm.getHobby() + " \n");
+            userDetails.write("Phone Number: " + userForm.getPhone() + " \n");
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
         model.addAttribute("userForm", userForm);
         return "result";
     }
