@@ -27,7 +27,8 @@ public class MyFirstAppApplication {
 
     @PostMapping("/submit")
     public String submitForm(@ModelAttribute("userForm") UserForm userForm, Model model) {
-        try(FileWriter userDetails = new FileWriter("About.txt", true)){
+        
+        try(FileWriter userDetails = new FileWriter("src/main/resources/About.txt", true)){
             userDetails.write("-----Filed Records--------📝 \n"+ LocalDateTime.now() + "---\n");
             userDetails.write("Name: " + userForm.getName() + " \n");
             userDetails.write("Email: " + userForm.getEmail() + " \n");
