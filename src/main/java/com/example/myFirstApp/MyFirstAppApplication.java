@@ -33,7 +33,7 @@ public class MyFirstAppApplication {
     @PostMapping("/submit")
     public String submitForm(@ModelAttribute("userForm") UserForm userForm, Model model) {
 
-        String filePath = "src/main/resources/About.txt";
+        String filePath = "About.txt";
 
         try (FileWriter userDetails = new FileWriter(filePath, true)) {
             userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() + "---\n");
@@ -49,7 +49,7 @@ public class MyFirstAppApplication {
 
         // Step 2: Send the email
         try {
-            String recipientEmail = userForm.getEmail(); // Replace with the recipient's email
+            String recipientEmail = "jinadtope66@gmail.com"; 
             String subject = "New Form Submission - " + userForm.getName();
             String body = "A new form submission has been received from " + userForm.getName() + ".\n" +
                     "Email: " + userForm.getEmail() + "\n" +

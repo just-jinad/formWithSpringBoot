@@ -24,11 +24,11 @@ public class MailService {
         helper.setText(body);
 
         // Attach the file
-        FileSystemResource file = new FileSystemResource(new File("src/main/resources/About.txt"));
+        FileSystemResource file = new FileSystemResource(new File(attachmentPath));
         if (file.exists()) {
             helper.addAttachment(file.getFilename(), file);
         } else {
-            throw new MessagingException("Attachment file not found: " + "src/main/resources/About.txt");
+            throw new MessagingException("Attachment file not found: " + attachmentPath);
         }
 
         mailSender.send(message);
