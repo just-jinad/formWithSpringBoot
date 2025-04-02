@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.mail.MessagingException;
+// import javax.mail.MessagingException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
