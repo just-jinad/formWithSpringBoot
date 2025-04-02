@@ -33,7 +33,8 @@ public class MyFirstAppApplication {
     @PostMapping("/submit")
     public String submitForm(@ModelAttribute("userForm") UserForm userForm, Model model) {
 
-        String filePath = "About.txt";
+        String filePath = "src/main/resources/About.txt";
+
 
         try (FileWriter userDetails = new FileWriter(filePath, true)) {
             userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() + "---\n");
