@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <title>Result</title>
-  </head>
-  <body>
-    <div>
-      <h1>Submission Details!</h1>
-      <p>Name: <span th:text="${userForm.name}"></span></p>
-      <p>Email: <span th:text="${userForm.email}"></span></p>
-      <p>Address: <span th:text="${userForm.address}"></span></p>
-      <p>Phone: <span th:text="${userForm.phone}"></span></p>
-      <p>Hobby: <span th:text="${userForm.hobby}"></span></p>
-      <p>Password: <span>******</span></p>
-      <a th:href="@{/register}">Back to Form</a>
-      <a href="/download">Download details</a>
-      <!-- <button th:href="@{/download}" class="btn btn-success">Download Sample File</button> -->
+    <!-- Add Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .message {
+            margin-top: 20px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-lg mx-auto mt-10 text-center">
+        <h1 class="text-3xl font-bold mb-6">Submission Details!</h1>
+        <p th:if="${message}" th:class="${message.startsWith('Error') ? 'error' : 'success'}" th:text="${message}" class="message"></p>
+        <p th:if="${emailMessage}" th:class="${emailMessage.startsWith('Error') ? 'error' : 'success'}" th:text="${emailMessage}" class="message"></p>
+        <p class="text-lg"><strong>Name:</strong> <span th:text="${userForm.name}"></span></p>
+        <p class="text-lg"><strong>Email:</strong> <span th:text="${userForm.email}"></span></p>
+        <p class="text-lg"><strong>Address:</strong> <span th:text="${userForm.address}"></span></p>
+        <p class="text-lg"><strong>Phone:</strong> <span th:text="${userForm.phone}"></span></p>
+        <p class="text-lg"><strong>Hobby:</strong> <span th:text="${userForm.hobby}"></span></p>
+        <p class="text-lg"><strong>Password:</strong> <span>******</span></p>
+        <a th:href="@{/register}" class="inline-block mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Back to Form</a>
+        <a th:href="@{/download}" class="inline-block mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Download Sample File</a>
     </div>
-  </body>
+</body>
 </html>
