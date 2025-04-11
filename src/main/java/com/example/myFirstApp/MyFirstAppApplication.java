@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.myFirstApp.entity.User;
 import com.example.myFirstApp.repo.UserRepo;
 import org.springframework.ui.Model;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDateTime;
+// import java.io.FileWriter;
+// import java.io.IOException;
+// import java.time.LocalDateTime;
 
 @SpringBootApplication
 @Controller
@@ -38,23 +38,24 @@ public class MyFirstAppApplication {
 
         String filePath = "src/main/resources/About.txt";
 
-        User user = new User(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(), userForm.getPhone());
+        User user = new User(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
+                userForm.getPhone());
         userRepo.save(user);
         model.addAttribute("message", "User details saved successfully!");
 
         // try (FileWriter userDetails = new FileWriter(filePath, true)) {
-        //     userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() + "---\n");
-        //     userDetails.write("Name: " + userForm.getName() + " \n");
-        //     userDetails.write("Email: " + userForm.getEmail() + " \n");
-        //     userDetails.write("Address: " + userForm.getAddress() + " \n");
-        //     userDetails.write("Hobby: " + userForm.getHobby() + " \n");
-        //     userDetails.write("Phone Number: " + userForm.getPhone() + " \n");
+        // userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() +
+        // "---\n");
+        // userDetails.write("Name: " + userForm.getName() + " \n");
+        // userDetails.write("Email: " + userForm.getEmail() + " \n");
+        // userDetails.write("Address: " + userForm.getAddress() + " \n");
+        // userDetails.write("Hobby: " + userForm.getHobby() + " \n");
+        // userDetails.write("Phone Number: " + userForm.getPhone() + " \n");
 
         // } catch (IOException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
 
-    
         try {
             String recipientEmail = userForm.getEmail();
             String subject = "Dear Admin";
