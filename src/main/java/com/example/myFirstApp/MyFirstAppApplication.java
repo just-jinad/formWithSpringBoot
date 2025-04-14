@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.myFirstApp.entity.User;
-import com.example.myFirstApp.repo.UserRepo;
+// import com.example.myFirstApp.entity.User;
+import com.example.myFirstApp.entity.UserF;
+// import com.example.myFirstApp.repo.UserRepo;
+// import com.example.myFirstApp.repo.UserRepo;
+import com.example.myFirstApp.repo.UserRepository;
+
 import org.springframework.ui.Model;
 // import java.io.FileWriter;
 // import java.io.IOException;
@@ -25,7 +29,8 @@ public class MyFirstAppApplication {
     @Autowired
     private MailService mailService;
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepository;
+    // private UserRepo userRepo;
 
     @GetMapping("/register")
     public String showForm(Model model) {
@@ -38,10 +43,10 @@ public class MyFirstAppApplication {
 
         String filePath = "src/main/resources/About.txt";
 
-        User user = new User(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
+        UserF user = new UserF(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
                 userForm.getPhone());
-        userRepo.save(user);
-        model.addAttribute("message", "User details saved successfully!");
+        userRepository.save(user);
+        model.addAttribute("message", "User details saved successfully to mongodb!");
 
         // try (FileWriter userDetails = new FileWriter(filePath, true)) {
         // userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() +
