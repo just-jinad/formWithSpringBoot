@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
-// import com.example.myFirstApp.entity.User;
-import com.example.myFirstApp.entity.UserF;
-// import com.example.myFirstApp.repo.UserRepo;
-// import com.example.myFirstApp.repo.UserRepo;
-import com.example.myFirstApp.repo.UserRepository;
+import com.example.myFirstApp.entity.User;
+import com.example.myFirstApp.repo.UserRepo;
+// import com.example.myFirstApp.entity.UserF;
+// import com.example.myFirstApp.repo.UserRepository;
 
 import org.springframework.ui.Model;
 // import java.io.FileWriter;
@@ -29,8 +28,8 @@ public class MyFirstAppApplication {
     @Autowired
     private MailService mailService;
     @Autowired
-    private UserRepository userRepository;
-    // private UserRepo userRepo;
+    // private UserRepository userRepository;
+    private UserRepo userRepo;
 
     @GetMapping("/register")
     public String showForm(Model model) {
@@ -43,23 +42,10 @@ public class MyFirstAppApplication {
 
         String filePath = "src/main/resources/About.txt";
 
-        UserF user = new UserF(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
+        User user = new User(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
                 userForm.getPhone());
-        userRepository.save(user);
+        userRepo.save(user);
         model.addAttribute("message", "User details saved successfully to mongodb!");
-
-        // try (FileWriter userDetails = new FileWriter(filePath, true)) {
-        // userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() +
-        // "---\n");
-        // userDetails.write("Name: " + userForm.getName() + " \n");
-        // userDetails.write("Email: " + userForm.getEmail() + " \n");
-        // userDetails.write("Address: " + userForm.getAddress() + " \n");
-        // userDetails.write("Hobby: " + userForm.getHobby() + " \n");
-        // userDetails.write("Phone Number: " + userForm.getPhone() + " \n");
-
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
 
         try {
             String recipientEmail = userForm.getEmail();
@@ -76,3 +62,16 @@ public class MyFirstAppApplication {
         return "result";
     }
 }
+
+// try (FileWriter userDetails = new FileWriter(filePath, true)) {
+// userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() +
+// "---\n");
+// userDetails.write("Name: " + userForm.getName() + " \n");
+// userDetails.write("Email: " + userForm.getEmail() + " \n");
+// userDetails.write("Address: " + userForm.getAddress() + " \n");
+// userDetails.write("Hobby: " + userForm.getHobby() + " \n");
+// userDetails.write("Phone Number: " + userForm.getPhone() + " \n");
+
+// } catch (IOException e) {
+// e.printStackTrace();
+// }
