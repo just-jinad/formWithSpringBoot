@@ -16,16 +16,18 @@ public class User {
     private String address;
     private String hobby;
     private String phone;
+    private String password;
 
     public User() {
     }
 
-    public User(String name, String email, String address, String hobby, String phone) {
+    public User(String name, String email, String address, String hobby, String phone, String password) {
         this.name = name;
         this.email = email;
         this.address = address;
         this.hobby = hobby;
         this.phone = phone;
+        this.password = password;
     }
 
     // Getters and Setters    
@@ -65,5 +67,13 @@ public class User {
     }
     public void setPhone(String phone){
         this.phone = phone;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 }

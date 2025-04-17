@@ -43,7 +43,7 @@ public class MyFirstAppApplication {
         String filePath = "src/main/resources/About.txt";
 
         User user = new User(userForm.getName(), userForm.getEmail(), userForm.getAddress(), userForm.getHobby(),
-                userForm.getPhone());
+                userForm.getPhone(), userForm.getPassword());
         userRepo.save(user);
         model.addAttribute("message", "User details saved successfully to mongodb!");
 
@@ -61,6 +61,12 @@ public class MyFirstAppApplication {
         model.addAttribute("userForm", userForm);
         return "result";
     }
+
+    @GetMapping("/users")
+        public String showUsers(Model model) {
+            model.addAttribute("users", userRepo.findAll());
+            return "users";
+        }
 }
 
 // try (FileWriter userDetails = new FileWriter(filePath, true)) {
