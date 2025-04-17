@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.myFirstApp.entity.User;
@@ -63,10 +64,32 @@ public class MyFirstAppApplication {
     }
 
     @GetMapping("/users")
-        public String showUsers(Model model) {
-            model.addAttribute("users", userRepo.findAll());
-            return "users";
+    public String showUsers(Model model) {
+        model.addAttribute("users", userRepo.findAll());
+        return "users";
+    }
+
+    @PostMapping("/update-user")
+    public String updateUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+        try {
+            userRepo.updateUser(user);
+            redirectAttributes.addFlashAttribute("successMessage", "User updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update user: " + e.getMessage());
         }
+        return "redirect:/users"; // Redirect back to the users list
+    }
+
+    @PostMapping("/delete-user/{id}")
+    public String deleteUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+        try {
+            userRepo.deleteById(user.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
+        }
+        return "redirect:/users"; // Redirect back to the users list
+    }
 }
 
 // try (FileWriter userDetails = new FileWriter(filePath, true)) {

@@ -57,7 +57,7 @@
                 </td>
                 <td>
                     <button class="btn btn-sm btn-danger"
-                    data-id="${user.id}"
+                    th:attr="data-id=${user.id}, data-name=${user.name}"
                     onclick="showDeleteConfirmation(this)">
                 <i class="fas fa-trash-alt"></i>
             </button>
@@ -170,6 +170,10 @@ function showDeleteConfirmation(button) {
     document.getElementById('deleteForm').action = '/delete-user/' + id;
 
     new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+function deleteUser() {
+    document.getElementById('deleteForm').submit();
 }
     </script>
 </body>
