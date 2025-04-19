@@ -77,7 +77,7 @@ public class MyFirstAppApplication {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update user: " + e.getMessage());
         }
-        return "redirect:/users"; // Redirect back to the users list
+        return "redirect:/users"; 
     }
 
     @PostMapping("/delete-user/{id}")
@@ -88,9 +88,36 @@ public class MyFirstAppApplication {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
         }
-        return "redirect:/users"; // Redirect back to the users list
+        return "redirect:/users"; 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // try (FileWriter userDetails = new FileWriter(filePath, true)) {
 // userDetails.write("-----Filed Records--------📝 \n" + LocalDateTime.now() +
