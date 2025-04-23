@@ -1,9 +1,11 @@
 package com.example.myFirstApp.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class User {
@@ -12,6 +14,9 @@ public class User {
     private Long id;
 
     private String name;
+
+    @NotBlank(message = "Email is required")
+    @Column(unique = true)
     private String email;
     private String address;
     private String hobby;
