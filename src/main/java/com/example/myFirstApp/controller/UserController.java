@@ -93,6 +93,16 @@ public class UserController {
             return "redirect:/users";
         }
         try {
+            // Hash the password if it has been changed
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            } else {
+                // If password is not changed, keep the existing password
+                User existingUser = userRepository.findById(user.getId()).orElse(null);
+                if (existingUser != null) {
+                    user.setPassword(existingUser.getPassword());
+                }
+            }
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("successMessage", "User updated successfully!");
         } catch (Exception e) {
