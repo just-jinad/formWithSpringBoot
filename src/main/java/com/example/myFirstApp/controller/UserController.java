@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Controller
@@ -56,7 +55,7 @@ public class UserController {
         user.setHobby(user.getHobby() != null ? user.getHobby().trim() : null);
         user.setAddress(user.getAddress() != null ? user.getAddress().trim() : null);
         user.setPhone(user.getPhone() != null ? user.getPhone().trim() : null);
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
+        user.setPassword(passwordEncoder.encode(user.getPassword())); 
         userRepository.save(user);
         model.addAttribute("message", "User data saved to MySQL successfully!");
 
@@ -111,14 +110,14 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @PostMapping("/delete-user/{id}")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+   @PostMapping("/delete-user/{id}")
+    public String deleteUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         try {
-            userRepository.deleteById(id);
+            userRepository.deleteById(user.getId());
             redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
         }
-        return "redirect:/users";
+        return "redirect:/users"; 
     }
 }

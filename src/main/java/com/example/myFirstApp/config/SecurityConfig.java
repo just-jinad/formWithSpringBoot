@@ -16,13 +16,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/register", "/login").permitAll() // Public access
-                .requestMatchers("/users").authenticated() // Require authentication for /users
-                .anyRequest().permitAll() // Other endpoints are public for now
+                .requestMatchers("/", "/register", "/login").permitAll() 
+                .requestMatchers("/users").authenticated() 
+                .anyRequest().permitAll() 
             )
             .formLogin(form -> form
-                .loginPage("/login") // Custom login page
-                .defaultSuccessUrl("/users", true) // Redirect to /users after login
+                .loginPage("/login") 
+                .defaultSuccessUrl("/users", true) 
                 .permitAll()
             )
             .logout(logout -> logout

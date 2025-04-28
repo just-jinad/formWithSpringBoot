@@ -126,7 +126,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete <span id="deleteUserName"></span>?</p>
-                    <form id="deleteForm" method="post">
+                    <form id="deleteForm" th:action="@{/delete-user/__id__}"  method="post">
                         <input type="hidden" id="deleteId" name="id">
                     </form>
                 </div>
