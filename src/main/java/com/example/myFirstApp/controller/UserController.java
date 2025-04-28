@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-
 @Controller
 public class UserController {
 
@@ -55,7 +54,7 @@ public class UserController {
         user.setHobby(user.getHobby() != null ? user.getHobby().trim() : null);
         user.setAddress(user.getAddress() != null ? user.getAddress().trim() : null);
         user.setPhone(user.getPhone() != null ? user.getPhone().trim() : null);
-        user.setPassword(passwordEncoder.encode(user.getPassword())); 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         model.addAttribute("message", "User data saved to MySQL successfully!");
 
@@ -66,7 +65,7 @@ public class UserController {
                     "See the attached file for details.";
             mailService.sendEmailWithAttachment(recipientEmail, subject, body, filePath);
             model.addAttribute("emailMessage", "Email sent successfully with attachment!");
-        } catch (Exception e) { // Catching a more generic exception
+        } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("emailMessage", "Error sending email: " + e.getMessage());
         }
@@ -86,17 +85,16 @@ public class UserController {
     }
 
     @PostMapping("/update-user")
-    public String updateUser(@Valid @ModelAttribute User user, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String updateUser(@Valid @ModelAttribute User user, BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update user due to validation errors.");
             return "redirect:/users";
         }
         try {
-            // Hash the password if it has been changed
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             } else {
-                // If password is not changed, keep the existing password
                 User existingUser = userRepository.findById(user.getId()).orElse(null);
                 if (existingUser != null) {
                     user.setPassword(existingUser.getPassword());
@@ -110,7 +108,7 @@ public class UserController {
         return "redirect:/users";
     }
 
-   @PostMapping("/delete-user/{id}")
+    @PostMapping("/delete-user/{id}")
     public String deleteUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         try {
             userRepository.deleteById(user.getId());
@@ -118,6 +116,6 @@ public class UserController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
         }
-        return "redirect:/users"; 
+        return "redirect:/users";
     }
 }
