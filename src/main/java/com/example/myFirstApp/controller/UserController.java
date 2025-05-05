@@ -1,7 +1,9 @@
 package com.example.myFirstApp.controller;
 
 import com.example.myFirstApp.MailService;
+import com.example.myFirstApp.entity.Role;
 import com.example.myFirstApp.entity.User;
+import com.example.myFirstApp.repo.RoleRepo;
 import com.example.myFirstApp.repo.UserRepo;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 
 @Controller
 public class UserController {
@@ -30,6 +34,9 @@ public class UserController {
     private UserRepo userRepository;
 
     @Autowired
+    private RoleRepo roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
@@ -40,13 +47,16 @@ public class UserController {
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
+        model.addAttribute("roleOptions", new String[]{"ROLE_USER", "ROLE_ADMIN"});
         return "register";
     }
 
     @PostMapping("/register")
-    public String saveUser(@Valid @ModelAttribute User user, BindingResult result, Model model) {
+    public String saveUser(@Valid @ModelAttribute User user, BindingResult result, Model model,
+                          @RequestParam("role") String role) {
         if (result.hasErrors()) {
             logger.error("Validation errors: {}", result.getAllErrors());
+            model.addAttribute("roleOptions", new String[]{"ROLE_USER", "ROLE_ADMIN"});
             return "register";
         }
 
@@ -56,7 +66,14 @@ public class UserController {
         user.setHobby(user.getHobby() != null ? user.getHobby().trim() : null);
         user.setAddress(user.getAddress() != null ? user.getAddress().trim() : null);
         user.setPhone(user.getPhone() != null ? user.getPhone().trim() : null);
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
+        Role userRole = roleRepository.findByName(role)
+            .orElseGet(() -> {
+                Role newRole = new Role(role);
+                return roleRepository.save(newRole);
+            });
+        user.setRoles(Collections.singleton(userRole));
         userRepository.save(user);
         model.addAttribute("message", "User data saved to MySQL successfully!");
 
@@ -67,7 +84,7 @@ public class UserController {
                     "See the attached file for details.";
             mailService.sendEmailWithAttachment(recipientEmail, subject, body, filePath);
             model.addAttribute("emailMessage", "Email sent successfully with attachment!");
-        } catch (Exception e) { // Catching a more generic exception
+        } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("emailMessage", "Error sending email: " + e.getMessage());
         }
@@ -82,8 +99,19 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        User currentUser = userRepository.findByEmail(getCurrentUserEmail()).orElse(null);
+        if (currentUser != null && !currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+            model.addAttribute("users", Collections.singletonList(currentUser));
+        } else {
+            model.addAttribute("users", userRepository.findAll());
+        }
         return "users";
+    }
+
+    private String getCurrentUserEmail() {
+        // This is a placeholder; in a real app, use Spring Security's SecurityContextHolder
+        // For now, assume we get it from the authenticated user
+        return "example@example.com"; // Replace with actual authentication logic
     }
 
     @PostMapping("/update-user")
@@ -93,11 +121,9 @@ public class UserController {
             return "redirect:/users";
         }
         try {
-            
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             } else {
-                // If password is not changed, keep the existing password
                 User existingUser = userRepository.findById(user.getId()).orElse(null);
                 if (existingUser != null) {
                     user.setPassword(existingUser.getPassword());
@@ -120,5 +146,11 @@ public class UserController {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete user: " + e.getMessage());
         }
         return "redirect:/users";
+    }
+
+    @GetMapping("/admin")
+    public String showAdmin(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "admin";
     }
 }

@@ -16,13 +16,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/register", "/login").permitAll() 
-                .requestMatchers("/users").authenticated() 
-                .anyRequest().permitAll()
+                .requestMatchers("/", "/register", "/login").permitAll()
+                .requestMatchers("/users").hasRole("USER")
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") 
-                .defaultSuccessUrl("/users", true) 
+                .loginPage("/login")
+                .successHandler((request, response, authentication) -> {
+                    boolean isAdmin = authentication.getAuthorities().stream()
+                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+                    if (isAdmin) {
+                        response.sendRedirect("/admin");
+                    } else {
+                        response.sendRedirect("/users");
+                    }
+                })
                 .permitAll()
             )
             .logout(logout -> logout

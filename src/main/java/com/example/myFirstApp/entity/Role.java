@@ -1,37 +1,51 @@
-// package com.example.myFirstApp.entity;
+package com.example.myFirstApp.entity;
 
-// import jakarta.persistence.Column;
-// import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
+@Entity
+@Table(name = "roles")
+public class Role {
 
-// import jakarta.persistence.ManyToMany;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-// import java.util.HashSet;
-// import java.util.Set;
+    private String name;
 
-// @Entity
-// public class Role {
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long id;
+    // Constructors
+    public Role() {}
 
-//     private String name;
+    public Role(String name) {
+        this.name = name;
+    }
 
-//     @ManyToMany(mappedBy = "roles")
-//     private Set<User> users = new HashSet<>();
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-//     // Getters and Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-//     public String getName() {
-//         return name;
-//     }
+    public String getName() {
+        return name;
+    }
 
-//     public void setName(String name) {
-//         this.name = name;
-//     }
-    
-// }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+}
