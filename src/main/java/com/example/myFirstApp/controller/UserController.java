@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,7 +54,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String saveUser(@Valid @ModelAttribute User user, BindingResult result, Model model,
-                          @RequestParam("role") String role) {
+                           @RequestParam("role") String role) {
         if (result.hasErrors()) {
             logger.error("Validation errors: {}", result.getAllErrors());
             model.addAttribute("roleOptions", new String[]{"ROLE_USER", "ROLE_ADMIN"});
@@ -99,19 +100,24 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        User currentUser = userRepository.findByEmail(getCurrentUserEmail()).orElse(null);
-        if (currentUser != null && !currentUser.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
-            model.addAttribute("users", Collections.singletonList(currentUser));
-        } else {
-            model.addAttribute("users", userRepository.findAll());
+        String currentUserEmail = getCurrentUserEmail();
+        User currentUser = userRepository.findByEmail(currentUserEmail).orElse(null);
+        
+        if (currentUser != null) {
+            boolean isAdmin = currentUser.getRoles().stream()
+                .anyMatch(r -> r.getName().equals("ROLE_ADMIN"));
+            if (!isAdmin) {
+                model.addAttribute("users", Collections.singletonList(currentUser));
+            } else {
+                model.addAttribute("users", userRepository.findAll());
+            }
+            model.addAttribute("currentUserId", currentUser.getId());
         }
         return "users";
     }
 
     private String getCurrentUserEmail() {
-        // This is a placeholder; in a real app, use Spring Security's SecurityContextHolder
-        // For now, assume we get it from the authenticated user
-        return "example@example.com"; // Replace with actual authentication logic
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     @PostMapping("/update-user")
@@ -151,6 +157,7 @@ public class UserController {
     @GetMapping("/admin")
     public String showAdmin(Model model) {
         model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("user", new User()); // Add an empty User object for form binding
         return "admin";
     }
 }
